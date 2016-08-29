@@ -1,5 +1,17 @@
+import unittest
 from selenium import webdriver
 
-driver = webdriver.Chrome()
-driver.get("localhost:8000")
-assert "Django" in driver.title
+
+class HomePageTests(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome()
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_home_page(self):
+        self.driver.get("localhost:8000")
+        self.assertIn("Contacts", self.driver.title)
+
+if __name__ == '__main__':
+    unittest.main()
