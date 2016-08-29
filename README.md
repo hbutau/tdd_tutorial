@@ -1,5 +1,5 @@
 # tdd_tutorial
-##Introduction to test driven development with Python tutorial for PyConZa 2016
+##Introduction to Test Driven Development with Python Tutorial for PyConZa 2016
 
 
 
