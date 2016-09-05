@@ -11,7 +11,8 @@ class HomePageTests(unittest.TestCase):
 
     def test_home_page(self):
         self.driver.get("localhost:8000")
-        self.assertIn("Contacts", self.driver.title)
+        self.assertIn("AdressBook", self.driver.title)
+        self.fail('Finish the Tests!')
 
 if __name__ == '__main__':
     unittest.main()
