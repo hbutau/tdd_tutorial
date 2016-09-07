@@ -14,3 +14,4 @@ class HomePageTest(TestCase):
             response = Home.as_view()(request)
             self.assertIn('<title>AdressBook</title>', response.content.decode(
                 'utf8'))
+            # self.assertEqual('home.html',response.template_name)
