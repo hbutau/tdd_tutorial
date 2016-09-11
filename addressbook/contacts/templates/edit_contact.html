@@ -1,0 +1,14 @@
+<h1>Add Contact!</h1>
+
+<form action = "{% url "contacts-new" %}" method="Post">
+
+	{% csrf_token %}
+
+	<ul>
+		{{ form.as_ul }}
+	</ul>
+	<input name="save" type="submit" value="Save" />
+
+</form>
+
+
