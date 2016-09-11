@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to tdd_tutorial's documentation!
-========================================
+Introduction To Test Driven Development with Python & Django
+============================================================
 
 Contents:
 
@@ -12,7 +12,9 @@ Contents:
    :maxdepth: 2
    
    introduction
-
+   ============ 
+   software_installation_with_Acceptance_tests
+   ===========================================
 
 Indices and tables
 ==================
