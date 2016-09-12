@@ -1,5 +1,17 @@
+#!/usr/bin/env python3
+
+import unittest
 from selenium import webdriver
 
-driver = webdriver.Chrome()
-driver.get('localhost:8000')
-assert 'Django' in driver.title
+
+class Django_Page_Test(unittest.TestCase):
+
+    def setUp(self):
+        self.driver = webdriver.Chrome()
+
+    def teardown(self):
+        self.driver.quit()
+
+    def test_django_page(self):
+        self.assertEquals('Congratulations on your first Django-powered page.',
+            self.driver.find_element_by_tag_name('h2').text)
