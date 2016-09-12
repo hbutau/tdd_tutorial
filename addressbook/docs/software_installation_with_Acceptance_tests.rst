@@ -25,8 +25,12 @@ This command tells django to create a project in the current directory as shown 
 Now when we run the acceptance test again with::
 
         python acceptance.py
+<<<<<<< Updated upstream
 we should get no output meaning that our acceptance test passed and therefore django is up and running.
 
 Now that our acceptance test is passing we need to use unittests so that we can check our real front page and see whether it does what it is supposed to do::
 
         #!/usr/bin/env python3
+=======
+we should get no output meaning that our acceptance test passed and therefore django is up and running
+>>>>>>> Stashed changes
