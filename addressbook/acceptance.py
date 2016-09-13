@@ -14,7 +14,7 @@ class Django_Page_Test(unittest.TestCase):
         self.driver.quit()
 
     def test_django_page(self):
-        self.assertTrue('Welcome to Adressbook' == self.driver.find_element_by_tag_name('h1').text)
+        self.assertTrue('Welcome to Addressbook' == self.driver.find_element_by_tag_name('h1').text)
 
 if __name__ == '__main__':
     unittest.main()

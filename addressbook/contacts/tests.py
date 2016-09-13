@@ -1,9 +1,15 @@
+from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.test.client import RequestFactory
+from .views import home
 
-# Create your tests here.
-class Home_Page_Test(TestCase):
 
-    def test_home_page_html(self):
-        request = HttpRequest()
-        response = home_page(request)
-        self.assertIn()
+class HomePageTest(TestCase):
+
+        def setUp(self):
+            self.factory = RequestFactory()
+
+        def test_home_page_html(self):
+            request = self.factory.get(reverse('home-page'))
+            response = home(request)
+            self.assertIn(b'<h1>Welcome to Addressbook</h1>', response.content)
