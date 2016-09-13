@@ -77,9 +77,7 @@ if we run our functional test with::
 we should see the foolowing error::
         
         
-        ======================================================================
-        FAIL: test_django_page (acceptance.Django_Page_Test)
-        ----------------------------------------------------------------------
+        
         Traceback (most recent call last):
         File "/home/hamub/projects/tdd_tutorial/addressbook/acceptance.py", line 17, in test_django_page
         self.assertTrue('Welcome to Adressbook' == self.driver.find_element_by_tag_name('h1').text)

@@ -11,10 +11,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
+   
    introduction
-   ============ 
+   software_installation_with_Acceptance tests
    software_installation_with_Acceptance_tests
-   ===========================================
+   Writing_our_app
+   
 
 Indices and tables
 ==================
