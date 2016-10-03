@@ -19,9 +19,11 @@ import contacts.views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', contacts.views.Home.as_view(),
-        name='home_page',),
+    # url(r'^$', contacts.views.Home.as_view(),
+    #     name='home_page',),
+    url(r'^$', contacts.views.home, name='home_page',),
 
-    url(r'^new$', contacts.views.CreateContactView.as_view(),
-                name='contacts-new',),
+
+    # url(r'^new$', contacts.views.CreateContactView.as_view(),
+    #             name='contacts-new',),
 ]
