@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating the Addressbook Application with unittest &#8212; tdd_tutorial 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="tdd_tutorial 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Installing Django" href="software_installation_with_Acceptance_tests.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="creating-the-addressbook-application-with-unittest">
+<h1>Creating the Addressbook Application with unittest<a class="headerlink" href="#creating-the-addressbook-application-with-unittest" title="Permalink to this headline">¶</a></h1>
+<p>Our last functional test failed as it couldnt find our expected heading. It is time we started thinking and planning how to make the functional test pass. We can do this by writting some code to make it pass. But before we can do that, the tenets of TDD dictate that before we write any production code we must write unittest first. Therefore we are going to write tests followed by our code and then we run our unitest followed by functional test to check if it is now passing. Let us start by creating our django app:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">startapp</span> <span class="n">contacts</span>
+</pre></div>
+</div>
+<p>The above command starts a django application inside our project directory. It also creates extra files which include a tests.py module for our application. It is in this file that we aregoing to write our unittest going forward. Let us open this file and enter the following code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HomePageTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_home_page_html</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;home-page&#39;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">home</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">b</span><span class="s1">&#39;&lt;h1&gt;Welcome to Addressbook&lt;/h1&gt;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>lets us run our test runner with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="n">contacts</span>
+</pre></div>
+</div>
+<p>We should get the following failure:</p>
+<p>ERROR: contacts.tests (unittest.loader._FailedTest)</p>
+<p>ImportError: Failed to import test module: contacts.tests
+Traceback (most recent call last):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>File &#8220;/usr/lib/python3.5/unittest/loader.py&#8221;, line 428, in _find_test_path</dt>
+<dd>module = self._get_module_from_name(name)</dd>
+<dt>File &#8220;/usr/lib/python3.5/unittest/loader.py&#8221;, line 369, in _get_module_from_name</dt>
+<dd>__import__(name)</dd>
+<dt>File &#8220;/home/hamub/projects/tdd_tutorial/addressbook/contacts/tests.py&#8221;, line 4, in &lt;module&gt;</dt>
+<dd>from .views import home</dd>
+</dl>
+</div></blockquote>
+<p>ImportError: cannot import name &#8216;home&#8217;</p>
+<p>Ran 1 test in 0.001s</p>
+<p>The test has failed because we do not have a home view as yet. Lets open views.py and write our first view function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="k">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="k">import</span> <span class="n">HttpResponse</span>
+
+<span class="c1"># Create your views here.</span>
+
+<span class="k">def</span> <span class="nf">home</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>when we run our test runner again we should see the following failure again:</p>
+<p>ERROR: test_home_page_html (contacts.tests.HomePageTest)</p>
+<dl class="docutils">
+<dt>Traceback (most recent call last):</dt>
+<dd><dl class="first last docutils">
+<dt>File &#8220;/home/hamub/projects/tdd_tutorial/addressbook/contacts/tests.py&#8221;, line 13, in test_home_page_html</dt>
+<dd>request = self.factory.get(reverse(&#8216;home-page&#8217;))</dd>
+<dt>File &#8220;/home/hamub/.virtualenvs/tdd/lib/python3.5/site-packages/django/core/urlresolvers.py&#8221;, line 578, in reverse</dt>
+<dd>return force_text(iri_to_uri(resolver._reverse_with_prefix(view, prefix, <a href="#id1"><span class="problematic" id="id2">*</span></a>args, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)))</dd>
+<dt>File &#8220;/home/hamub/.virtualenvs/tdd/lib/python3.5/site-packages/django/core/urlresolvers.py&#8221;, line 495, in _reverse_with_prefix</dt>
+<dd>(lookup_view_s, args, kwargs, len(patterns), patterns))</dd>
+</dl>
+</dd>
+</dl>
+<p>django.core.urlresolvers.NoReverseMatch: Reverse for &#8216;home-page&#8217; with arguments &#8216;()&#8217; and keyword arguments &#8216;{}&#8217; not found. 0 pattern(s) tried: []</p>
+<p>The reason we are getting this failure is because we have not defined any urls, lets go ahead and create one for our home page:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="k">import</span> <span class="n">include</span><span class="p">,</span> <span class="n">url</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="k">import</span> <span class="n">admin</span>
+<span class="kn">import</span> <span class="nn">contacts.views</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^$&#39;</span><span class="p">,</span> <span class="n">contacts</span><span class="o">.</span><span class="n">views</span><span class="o">.</span><span class="n">home</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;home-page&#39;</span><span class="p">,),</span>
+        <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Let us run our tests again and see if they fail again. After we run our test we get another failure:</p>
+<p>ERROR: test_home_page_html (contacts.tests.HomePageTest)</p>
+<dl class="docutils">
+<dt>Traceback (most recent call last):</dt>
+<dd><dl class="first last docutils">
+<dt>File &#8220;/home/hamub/projects/tdd_tutorial/addressbook/contacts/tests.py&#8221;, line 14, in test_home_page_html</dt>
+<dd>response = home(request)</dd>
+</dl>
+</dd>
+</dl>
+<p>TypeError: home() takes 0 positional arguments but 1 was given</p>
+<p>Ran 1 test in 0.012s</p>
+<p>Our traceback is telling us there is something wrong with our view function. Lets us open up views.py and edit it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;&lt;h1&gt;Welcome to Addressbook&lt;/h1&gt;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally our test passes with the following output:</p>
+<p>(tdd) ~/projects/tdd_tutorial/addressbook (master) $ python manage.py test contacts
+Creating test database for alias &#8216;default&#8217;...
+.</p>
+<p>Ran 1 test in 0.009s</p>
+<p>OK
+Destroying test database for alias &#8216;default&#8217;...</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="software_installation_with_Acceptance_tests.html" title="previous chapter">Installing Django</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Writing_our_app.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Humphrey Butau.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/Writing_our_app.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

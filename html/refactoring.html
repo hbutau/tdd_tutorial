@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Refactoring &#8212; tdd_tutorial 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="tdd_tutorial 1.0 documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="refactoring">
+<h1>Refactoring<a class="headerlink" href="#refactoring" title="Permalink to this headline">¶</a></h1>
+<p>Our last test passed, but unfortunately the method used to generate the html is cumbersome and just not good. Since we are using Django we want to be able to use its templating system to generate web pages for us. For us to accomplish this we are going to have to refactor our code. We have to change the way our code handles html without changing its functionality. TDD also states that we shouldnt do any refactoring without tests, therefore we are fisrt going to run our last functional test and see if its still passing. If its passing we can go ahead an modify our functional test:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_home_page_html</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">Home</span><span class="o">.</span><span class="n">as_view</span><span class="p">()(</span><span class="n">request</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;home.html&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">template_name</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>When we run our tests with Python manage.py test contacts we get an error like the one below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+    <span class="n">File</span> <span class="s2">&quot;/home/hamub/projects/tdd_tutorial/addressbook/contacts/tests.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">14</span><span class="p">,</span> <span class="ow">in</span> <span class="n">test_home_page_html</span>
+     <span class="n">response</span> <span class="o">=</span> <span class="n">Home</span><span class="o">.</span><span class="n">as_view</span><span class="p">()(</span><span class="n">request</span><span class="p">)</span>
+<span class="ne">NameError</span><span class="p">:</span> <span class="n">name</span> <span class="s1">&#39;Home&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+</pre></div>
+</div>
+<p>We then start the unittest-code  cycle again to make our tests pass. In this case reading the traceback we can find out that &#8220;home&#8221; is not defined as we have not imported it.Let us change home to Home in the import statements. When we run our tests again we see that there is another error:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ne">ImportError</span><span class="p">:</span> <span class="n">Failed</span> <span class="n">to</span> <span class="kn">import</span> <span class="nn">test</span> <span class="n">module</span><span class="p">:</span> <span class="n">contacts</span><span class="o">.</span><span class="n">testsTraceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>  <span class="n">File</span> <span class="s2">&quot;/usr/lib/pyt</span>
+
+<span class="n">hon3</span><span class="o">.</span><span class="mi">5</span><span class="o">/</span><span class="n">unittest</span><span class="o">/</span><span class="n">loader</span><span class="o">.</span><span class="n">py</span><span class="s2">&quot;, line 428, in _find_test_path    module = s</span>
+<span class="n">elf</span><span class="o">.</span><span class="n">_get_module_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  <span class="n">File</span> <span class="s2">&quot;/usr/lib/python3.5/unittest/loa</span>
+<span class="n">der</span><span class="o">.</span><span class="n">py</span><span class="s2">&quot;, line 369, in _get_module_from_name    __import__(name)  File</span>
+
+ <span class="s2">&quot;/home/hamub/projects/tdd_tutorial/addressbook/contacts/tests.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">4</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+ <span class="kn">from</span> <span class="nn">.views</span> <span class="k">import</span> <span class="n">HomeImportError</span><span class="p">:</span> <span class="n">cannot</span> <span class="kn">import</span> <span class="nn">name</span>   <span class="s1">&#39;Home&#39;</span>
+</pre></div>
+</div>
+<p>This is because we have not yet changed our view function to be a class based one. Let us quickly change our view function to use django`s generic class based views, by implemanting the following code in our views.py dont forget to import TemplateView from django.views:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Home</span><span class="p">(</span><span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s1">&#39;home.html&#39;</span>
+</pre></div>
+</div>
+<p>We run our tests again, they seem to pass. But let us check with our functional tests to see if they are passing, by going to the terminal and running python acceptance.py. After the test we should see the following error:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;acceptance.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">19</span><span class="p">,</span> <span class="ow">in</span> <span class="n">test_django_page</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">textAssertionError</span><span class="p">:</span>
+<span class="kc">False</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">true</span>
+</pre></div>
+</div>
+<p>s is beacause we have not created any templates. But if we look closely at the tracebacks when we manually open the browser we see that there is a problem with our urls.py . Let us quicly alter everything since we are now using class based views. Let us quicly create a directory called templates inside our contacts directory and inside templates create a template called &#8220;home.html&#8221; and in that file we put the following markup:</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/refactoring.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Humphrey Butau.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/refactoring.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
